@@ -1,0 +1,376 @@
+
+<h2 class="sr-only">Eldib & Co — Full Conditional Access Policy Set for Microsoft 365 Business Premium</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.header{padding:1.25rem 1.5rem 1rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.header h1{font-size:17px;font-weight:500;color:var(--color-text-primary)}
+.header p{font-size:13px;color:var(--color-text-secondary);margin-top:4px}
+.license-bar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.lic-badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:500}
+.lic-p1{background:var(--color-background-info);color:var(--color-text-info)}
+.lic-intune{background:#e8f5e9;color:#2e7d32}
+.lic-defender{background:#fff3e0;color:#e65100}
+.lic-mda{background:#f3e5f5;color:#6a1b9a}
+@media(prefers-color-scheme:dark){
+  .lic-intune{background:#1b3a1c;color:#81c784}
+  .lic-defender{background:#3e2000;color:#ffb74d}
+  .lic-mda{background:#2d1b3d;color:#ce93d8}
+}
+.tabs{display:flex;gap:4px;padding:10px 1.5rem 0;border-bottom:0.5px solid var(--color-border-tertiary);overflow-x:auto}
+.tab{font-size:12px;padding:6px 14px;border-radius:6px 6px 0 0;cursor:pointer;border:0.5px solid transparent;color:var(--color-text-secondary);background:transparent;white-space:nowrap;border-bottom:none}
+.tab.active{background:var(--color-background-primary);border-color:var(--color-border-tertiary);border-bottom-color:var(--color-background-primary);color:var(--color-text-primary);font-weight:500;margin-bottom:-1px}
+.tab:hover:not(.active){background:var(--color-background-secondary)}
+.content{padding:1rem 1.5rem 1.5rem}
+.policy-grid{display:flex;flex-direction:column;gap:10px}
+.policy-card{border:0.5px solid var(--color-border-tertiary);border-radius:10px;overflow:hidden;background:var(--color-background-primary)}
+.policy-card.expanded .card-body{display:block}
+.card-head{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;user-select:none}
+.card-head:hover{background:var(--color-background-secondary)}
+.policy-id{font-size:11px;font-weight:500;font-family:var(--font-mono);color:var(--color-text-secondary);min-width:52px}
+.policy-name{font-size:14px;font-weight:500;color:var(--color-text-primary);flex:1}
+.status{font-size:11px;padding:2px 8px;border-radius:12px;font-weight:500;white-space:nowrap}
+.s-on{background:var(--color-background-success);color:var(--color-text-success)}
+.s-ro{background:var(--color-background-warning);color:var(--color-text-warning)}
+.priority-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.p-critical{background:#e24b4a}
+.p-high{background:#EF9F27}
+.p-medium{background:#1D9E75}
+.chevron{font-size:12px;color:var(--color-text-tertiary);transition:transform .2s;margin-left:4px}
+.policy-card.expanded .chevron{transform:rotate(180deg)}
+.card-body{display:none;border-top:0.5px solid var(--color-border-tertiary);padding:14px}
+.section-label{font-size:11px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;margin-top:12px}
+.section-label:first-child{margin-top:0}
+.tag-row{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:12px;padding:3px 9px;border-radius:6px;background:var(--color-background-secondary);color:var(--color-text-primary);border:0.5px solid var(--color-border-tertiary)}
+.tag.t-block{background:var(--color-background-danger);color:var(--color-text-danger)}
+.tag.t-grant{background:var(--color-background-success);color:var(--color-text-success)}
+.tag.t-session{background:var(--color-background-info);color:var(--color-text-info)}
+.tag.t-warn{background:var(--color-background-warning);color:var(--color-text-warning)}
+.note{font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin-top:10px;padding:8px 10px;border-left:2px solid var(--color-border-secondary);background:var(--color-background-secondary);border-radius:0 6px 6px 0}
+.impl-row{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+.impl-label{font-size:11px;color:var(--color-text-tertiary)}
+.impl-step{font-size:11px;padding:2px 8px;border-radius:12px;background:var(--color-background-secondary);color:var(--color-text-primary);border:0.5px solid var(--color-border-tertiary)}
+.order-flow{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:10px 0 4px}
+.order-node{font-size:11px;padding:4px 10px;border-radius:6px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary)}
+.order-arrow{font-size:11px;color:var(--color-text-tertiary)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--color-text-secondary);padding:10px 0 4px;align-items:center}
+.legend-item{display:flex;align-items:center;gap:5px}
+.excl-tag{font-size:12px;padding:3px 9px;border-radius:6px;background:#fff0f0;color:#a32d2d;border:0.5px solid #f09595}
+@media(prefers-color-scheme:dark){.excl-tag{background:#2d1010;color:#f09595;border-color:#791f1f}}
+</style>
+
+<div class="header">
+  <h1>Eldib & Co — Conditional Access Policy Set</h1>
+  <p>10 policies · Microsoft 365 Business Premium · Entra ID P1 + Intune + Defender for Business</p>
+  <div class="license-bar">
+    <span class="lic-badge lic-p1">Entra ID P1</span>
+    <span class="lic-badge lic-intune">Intune</span>
+    <span class="lic-badge lic-defender">Defender for Business</span>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('foundation',this)">Foundation (3)</button>
+  <button class="tab" onclick="showTab('identity',this)">Identity & MFA (2)</button>
+  <button class="tab" onclick="showTab('device',this)">Device (2)</button>
+  <button class="tab" onclick="showTab('session',this)">Session (2)</button>
+  <button class="tab" onclick="showTab('mobile',this)">Mobile (1)</button>
+  <button class="tab" onclick="showTab('order',this)">Deploy Order</button>
+</div>
+
+<div class="content">
+
+<div id="tab-foundation" class="tab-pane policy-grid">
+
+<div class="policy-card" onclick="toggle(this)">
+  <div class="card-head">
+    <div class="priority-dot p-critical"></div>
+    <span class="policy-id">CA-001</span>
+    <span class="policy-name">Block legacy authentication</span>
+    <span class="status s-on">Report-only → ON</span>
+    <span class="chevron">▾</span>
+  </div>
+  <div class="card-body">
+    <div class="section-label">Users</div>
+    <div class="tag-row"><span class="tag">All users</span><span class="excl-tag">Excl: Emergency access accounts</span></div>
+    <div class="section-label">Cloud apps</div>
+    <div class="tag-row"><span class="tag">All cloud apps</span></div>
+    <div class="section-label">Conditions — Client apps</div>
+    <div class="tag-row"><span class="tag">Exchange ActiveSync</span><span class="tag">Other clients (legacy)</span></div>
+    <div class="section-label">Grant</div>
+    <div class="tag-row"><span class="tag t-block">Block access</span></div>
+    <div class="note">⚡ Enable this FIRST. Legacy auth bypasses MFA — it's the #1 attack vector. Enable in report-only for 1 week to check impact, then turn ON. Protocols blocked: IMAP, POP3, SMTP AUTH, basic auth.</div>
+  </div>
+</div>
+
+<div class="policy-card" onclick="toggle(this)">
+  <div class="card-head">
+    <div class="priority-dot p-critical"></div>
+    <span class="policy-id">CA-002</span>
+    <span class="policy-name">Require MFA — all users, all apps</span>
+    <span class="status s-on">Report-only → ON</span>
+    <span class="chevron">▾</span>
+  </div>
+  <div class="card-body">
+    <div class="section-label">Users</div>
+    <div class="tag-row"><span class="tag">All users</span><span class="excl-tag">Excl: Break-glass accounts</span><span class="excl-tag">Excl: Service accounts</span></div>
+    <div class="section-label">Cloud apps</div>
+    <div class="tag-row"><span class="tag">All cloud apps</span></div>
+    <div class="section-label">Conditions</div>
+    <div class="tag-row"><span class="tag">Any platform</span><span class="tag">Browser + Modern auth</span></div>
+    <div class="section-label">Grant — Require one of</div>
+    <div class="tag-row"><span class="tag t-grant">Require MFA</span></div>
+    <div class="note">🔐 The backbone policy. All users must MFA for every app. Use Microsoft Authenticator (push notifications). Exclude CA-003 admin accounts — they get their own stricter policy.</div>
+  </div>
+</div>
+
+<div class="policy-card" onclick="toggle(this)">
+  <div class="card-head">
+    <div class="priority-dot p-critical"></div>
+    <span class="policy-id">CA-003</span>
+    <span class="policy-name">Require MFA — admin roles</span>
+    <span class="status s-on">ON immediately</span>
+    <span class="chevron">▾</span>
+  </div>
+  <div class="card-body">
+    <div class="section-label">Users — Directory roles</div>
+    <div class="tag-row"><span class="tag">Global Administrator</span><span class="tag">Security Administrator</span><span class="tag">Exchange Administrator</span><span class="tag">SharePoint Administrator</span><span class="tag">Helpdesk Administrator</span><span class="tag">User Administrator</span><span class="tag">Intune Administrator</span></div>
+    <div class="section-label">Cloud apps</div>
+    <div class="tag-row"><span class="tag">All cloud apps</span></div>
+    <div class="section-label">Grant</div>
+    <div class="tag-row"><span class="tag t-grant">Require MFA</span><span class="tag t-grant">Require compliant device (OR)</span></div>
+    <div class="section-label">Session</div>
+    <div class="tag-row"><span class="tag t-session">Sign-in frequency: 4 hours</span><span class="tag t-session">Persistent browser: Never</span></div>
+    <div class="note">🛡 Admins are the highest-value targets. This policy forces MFA + short re-auth sessions. Never persistent browser means closing the tab requires re-auth. Enable with Report-only first to avoid locking yourself out.</div>
+  </div>
+</div>
+
+</div>
+
+<div id="tab-identity" class="tab-pane policy-grid" style="display:none">
+
+<div class="policy-card" onclick="toggle(this)">
+  <div class="card-head">
+    <div class="priority-dot p-high"></div>
+    <span class="policy-id">CA-004</span>
+    <span class="policy-name">Require compliant device — corporate apps</span>
+    <span class="status s-ro">Report-only first</span>
+    <span class="chevron">▾</span>
+  </div>
+  <div class="card-body">
+    <div class="section-label">Users</div>
+    <div class="tag-row"><span class="tag">All users</span><span class="excl-tag">Excl: Emergency accounts</span></div>
+    <div class="section-label">Cloud apps</div>
+    <div class="tag-row"><span class="tag">Office 365</span><span class="tag">Microsoft Azure Management</span></div>
+    <div class="section-label">Grant — Require one of</div>
+    <div class="tag-row"><span class="tag t-grant">Require compliant device</span><span class="tag t-grant">Require Hybrid AD joined</span><span class="tag t-grant">Require MFA (fallback)</span></div>
+    <div class="note">💻 For company-owned devices enrolled in Intune. Users on managed devices pass automatically. Users on unmanaged devices still get through with MFA — use CA-006 to restrict what they can do once in. Run report-only until device enrollment is at 80%+.</div>
+  </div>
+</div>
+
+<div class="policy-card" onclick="toggle(this)">
+  <div class="card-head">
+    <div class="priority-dot p-high"></div>
+    <span class="policy-id">CA-005</span>
+    <span class="policy-name">Block access — non-corporate countries</span>
+    <span class="status s-ro">Configure named locations first</span>
+    <span class="chevron">▾</span>
+  </div>
+  <div class="card-body">
+    <div class="section-label">Pre-requisite</div>
+    <div class="tag-row"><span class="tag t-warn">Create Named Location: "Allowed Countries" = Egypt + any remote work countries</span></div>
+    <div class="section-label">Users</div>
+    <div class="tag-row"><span class="tag">All users</span><span class="excl-tag">Excl: Emergency accounts</span></div>
+    <div class="section-label">Cloud apps</div>
+    <div class="tag-row"><span class="tag">All cloud apps</span></div>
+    <div class="section-label">Conditions — Locations</div>
+    <div class="tag-row"><span class="tag">Any location</span><span class="excl-tag">Excl: "Allowed Countries" named location</span></div>
+    <div class="section-label">Grant</div>
+    <div class="tag-row"><span class="tag t-block">Block access</span></div>
+    <div class="note">🌍 Blocks any sign-in from outside Egypt (or your defined allowed countries). Very effective against credential stuffing from foreign IPs. If staff travel, add countries temporarily or use per-user exception groups. Start in report-only to identify travel patterns first.</div>
+  </div>
+</div>
+
+</div>
+
+<div id="tab-device" class="tab-pane policy-grid" style="display:none">
+
+<div class="policy-card" onclick="toggle(this)">
+  <div class="card-head">
+    <div class="priority-dot p-high"></div>
+    <span class="policy-id">CA-006</span>
+    <span class="policy-name">App enforced restrictions — unmanaged devices</span>
+    <span class="status s-ro">Report-only → ON</span>
+    <span class="chevron">▾</span>
+  </div>
+  <div class="card-body">
+    <div class="section-label">Users</div>
+    <div class="tag-row"><span class="tag">All users</span></div>
+    <div class="section-label">Cloud apps</div>
+    <div class="tag-row"><span class="tag">Office 365 SharePoint Online</span><span class="tag">Exchange Online</span></div>
+    <div class="section-label">Conditions — Filter for devices</div>
+    <div class="tag-row"><span class="tag">device.isCompliant -ne True AND device.trustType -ne "ServerAD"</span></div>
+    <div class="section-label">Session</div>
+    <div class="tag-row"><span class="tag t-session">Use app enforced restrictions</span><span class="tag t-session">Persistent browser: Never</span></div>
+    <div class="note">📂 When a user opens SharePoint or OWA from an unmanaged (personal/BYOD) device, they get read-only access — no downloads, no sync. The app enforces this natively. Must also enable the setting in SharePoint Admin Center: "Unmanaged device access → Allow limited, web-only access".</div>
+  </div>
+</div>
+
+<div class="policy-card" onclick="toggle(this)">
+  <div class="card-head">
+    <div class="priority-dot p-medium"></div>
+    <span class="policy-id">CA-007</span>
+    <span class="policy-name">Token protection — Windows devices</span>
+    <span class="status s-ro">GA on Windows only</span>
+    <span class="chevron">▾</span>
+  </div>
+  <div class="card-body">
+    <div class="section-label">Users</div>
+    <div class="tag-row"><span class="tag">All users</span><span class="excl-tag">Excl: Break-glass accounts</span></div>
+    <div class="section-label">Cloud apps</div>
+    <div class="tag-row"><span class="tag">Exchange Online</span><span class="tag">SharePoint Online</span></div>
+    <div class="section-label">Conditions — Device platforms</div>
+    <div class="tag-row"><span class="tag">Windows</span></div>
+    <div class="section-label">Session</div>
+    <div class="tag-row"><span class="tag t-session">Require token protection for sign-in sessions</span></div>
+    <div class="note">🔒 Binds the access token cryptographically to the specific device. Prevents token theft attacks (Pass-the-Token, Evilginx2-style adversary-in-the-middle). Highly relevant for your SOC work. Only GA on Windows + Entra joined devices currently. Enable cautiously — verify device enrollment first.</div>
+  </div>
+</div>
+
+</div>
+
+<div id="tab-session" class="tab-pane policy-grid" style="display:none">
+
+<div class="policy-card" onclick="toggle(this)">
+  <div class="card-head">
+    <div class="priority-dot p-high"></div>
+    <span class="policy-id">CA-008</span>
+    <span class="policy-name">Sign-in frequency — privileged & sensitive apps</span>
+    <span class="status s-on">ON</span>
+    <span class="chevron">▾</span>
+  </div>
+  <div class="card-body">
+    <div class="section-label">Users</div>
+    <div class="tag-row"><span class="tag">All admin directory roles</span></div>
+    <div class="section-label">Cloud apps</div>
+    <div class="tag-row"><span class="tag">Microsoft Azure Management</span><span class="tag">Microsoft Admin Portals</span><span class="tag">All cloud apps</span></div>
+    <div class="section-label">Session</div>
+    <div class="tag-row"><span class="tag t-session">Sign-in frequency: Every time (for Azure/Admin Portals)</span><span class="tag t-session">Sign-in frequency: 4 hours (for O365)</span><span class="tag t-session">Persistent browser: Never</span></div>
+    <div class="note">⏱ Admins must re-authenticate every time they access Azure portal or admin centers. For regular O365 apps it's every 4 hours. This limits the window of a stolen session. "Every time" uses step-up authentication — the user must re-MFA, not just re-enter password.</div>
+  </div>
+</div>
+
+<div class="policy-card" onclick="toggle(this)">
+  <div class="card-head">
+    <div class="priority-dot p-medium"></div>
+    <span class="policy-id">CA-009</span>
+    <span class="policy-name">Persistent browser — block on unmanaged devices</span>
+    <span class="status s-on">ON</span>
+    <span class="chevron">▾</span>
+  </div>
+  <div class="card-body">
+    <div class="section-label">Users</div>
+    <div class="tag-row"><span class="tag">All users</span></div>
+    <div class="section-label">Cloud apps</div>
+    <div class="tag-row"><span class="tag">All cloud apps</span></div>
+    <div class="section-label">Conditions — Device filter</div>
+    <div class="tag-row"><span class="tag">device.isCompliant -ne True AND device.trustType -ne "ServerAD"</span></div>
+    <div class="section-label">Session</div>
+    <div class="tag-row"><span class="tag t-session">Persistent browser session: Never persistent</span></div>
+    <div class="note">🌐 On any device that is not Intune-compliant or Hybrid AD joined (i.e., personal/BYOD/café PC), the browser session cookie is never saved. The user must re-authenticate every time they close and reopen the browser. Prevents persistent sessions on shared or unknown devices.</div>
+  </div>
+</div>
+
+</div>
+
+<div id="tab-mobile" class="tab-pane policy-grid" style="display:none">
+
+<div class="policy-card" onclick="toggle(this)">
+  <div class="card-head">
+    <div class="priority-dot p-high"></div>
+    <span class="policy-id">CA-010</span>
+    <span class="policy-name">Require app protection policy — iOS & Android</span>
+    <span class="status s-ro">Configure Intune MAM first</span>
+    <span class="chevron">▾</span>
+  </div>
+  <div class="card-body">
+    <div class="section-label">Pre-requisite</div>
+    <div class="tag-row"><span class="tag t-warn">Create Intune App Protection Policy for iOS & Android targeting O365 apps</span></div>
+    <div class="section-label">Users</div>
+    <div class="tag-row"><span class="tag">All users</span><span class="excl-tag">Excl: Emergency accounts</span></div>
+    <div class="section-label">Cloud apps</div>
+    <div class="tag-row"><span class="tag">Office 365</span></div>
+    <div class="section-label">Conditions — Device platforms</div>
+    <div class="tag-row"><span class="tag">iOS</span><span class="tag">Android</span></div>
+    <div class="section-label">Conditions — Client apps</div>
+    <div class="tag-row"><span class="tag">Mobile apps and desktop clients</span></div>
+    <div class="section-label">Grant</div>
+    <div class="tag-row"><span class="tag t-grant">Require approved client app</span><span class="tag t-grant">Require app protection policy (AND)</span></div>
+    <div class="note">📱 Forces mobile users to use Microsoft Outlook, Teams, OneDrive etc. (not native mail app). Intune App Protection wraps those apps with: PIN requirement, block copy/paste to personal apps, remote wipe of corporate data only. Works on BYOD — no full device enrollment needed (MAM without MDM). Very important for Eldib & Co BYOD scenarios.</div>
+  </div>
+</div>
+
+</div>
+
+<div id="tab-order" class="tab-pane" style="display:none">
+  <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:12px">Follow this sequence to avoid lockouts and policy conflicts. Always test in <strong style="color:var(--color-text-primary)">Report-only</strong> mode first.</div>
+
+  <div style="font-size:12px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Phase 1 — Immediate (Day 1)</div>
+  <div class="order-flow">
+    <span class="order-node">Create break-glass accounts</span><span class="order-arrow">→</span>
+    <span class="order-node">CA-003: Admin MFA (ON)</span><span class="order-arrow">→</span>
+    <span class="order-node">CA-001: Block legacy auth (Report-only)</span>
+  </div>
+
+  <div style="font-size:12px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:14px 0 6px">Phase 2 — Week 1</div>
+  <div class="order-flow">
+    <span class="order-node">CA-002: MFA all users (Report-only)</span><span class="order-arrow">→</span>
+    <span class="order-node">Review report-only logs</span><span class="order-arrow">→</span>
+    <span class="order-node">CA-001: Switch ON</span>
+  </div>
+
+  <div style="font-size:12px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:14px 0 6px">Phase 3 — Week 2-3</div>
+  <div class="order-flow">
+    <span class="order-node">CA-002: Switch ON</span><span class="order-arrow">→</span>
+    <span class="order-node">CA-005: Named locations (Report-only)</span><span class="order-arrow">→</span>
+    <span class="order-node">CA-008 & CA-009 session (ON)</span>
+  </div>
+
+  <div style="font-size:12px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:14px 0 6px">Phase 4 — Week 4 (after Intune enrollment)</div>
+  <div class="order-flow">
+    <span class="order-node">Deploy Intune compliance policies</span><span class="order-arrow">→</span>
+    <span class="order-node">CA-004: Compliant device</span><span class="order-arrow">→</span>
+    <span class="order-node">CA-006: App enforced restrictions</span><span class="order-arrow">→</span>
+    <span class="order-node">CA-010: Mobile MAM</span>
+  </div>
+
+  <div style="font-size:12px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin:14px 0 6px">Phase 5 — Advanced Hardening</div>
+  <div class="order-flow">
+    <span class="order-node">CA-005: Country block (ON)</span><span class="order-arrow">→</span>
+    <span class="order-node">CA-007: Token protection (ON)</span>
+  </div>
+
+  <div style="margin-top:18px;padding:10px 12px;border-radius:8px;background:var(--color-background-danger);border:0.5px solid var(--color-border-tertiary)">
+    <div style="font-size:12px;font-weight:500;color:var(--color-text-danger);margin-bottom:4px">Break-glass account rules</div>
+    <div style="font-size:12px;color:var(--color-text-secondary);line-height:1.6">Create 2 cloud-only Global Admin accounts · Exclude from ALL CA policies · Store credentials in physical safe · Monitor with alert rule in Defender for any sign-in · Never use for daily tasks</div>
+  </div>
+
+  <div style="margin-top:10px;padding:10px 12px;border-radius:8px;background:var(--color-background-info);border:0.5px solid var(--color-border-tertiary)">
+    <div style="font-size:12px;font-weight:500;color:var(--color-text-info);margin-bottom:4px">Report-only monitoring (Entra ID → Sign-in logs)</div>
+    <div style="font-size:12px;color:var(--color-text-secondary);line-height:1.6">Before flipping any policy ON, review Sign-in logs → filter "Conditional Access: Report-only" · Look for high-impact users hitting failures · Check for service accounts using legacy auth · Validate no business-critical app is being blocked</div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function toggle(card){card.classList.toggle('expanded')}
+function showTab(name,btn){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.style.display='none');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+name).style.display='flex';
+  if(name==='order') document.getElementById('tab-order').style.display='block';
+  btn.classList.add('active');
+}
+</script>
